@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - REDIS_URL=redis://redis:6379
+      - EDGAR_USER_AGENT=${EDGAR_USER_AGENT}
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+      - ./ml/models:/app/ml/models
+    depends_on:
+      - redis
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+
+  frontend:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - API_BASE=http://api:8000
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - api
+    command: streamlit run frontend/app.py --server.port=8501 --server.address=0.0.0.0
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+volumes:
+  redis_data:

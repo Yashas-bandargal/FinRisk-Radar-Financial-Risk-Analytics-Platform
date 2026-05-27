@@ -1,0 +1,33 @@
+numpy
+pandas
+yfinance
+requests
+pdfplumber
+scikit-learn
+xgboost
+shap
+joblib
+matplotlib
+scipy
+langchain
+langchain-community
+langchain-core
+chromadb
+sentence-transformers
+transformers
+tokenizers
+google-generativeai
+ragas
+datasets
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart
+streamlit
+plotly
+python-dotenv
+tenacity
+tqdm
+loguru
+pdfplumber  api='AIzaSyB4HpZf9hOaxVFoIf8fiLSH8ef4auktUYk'<= google api
+news api='be40672eff384078aaab74b871aea3d6

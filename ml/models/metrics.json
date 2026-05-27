@@ -1,0 +1,7 @@
+{
+  "auroc_cv_mean": 1.0,
+  "auroc_cv_std": 0.0,
+  "f1_cv_mean": 0.9867,
+  "n_samples": 71,
+  "n_distressed": 34
+}
