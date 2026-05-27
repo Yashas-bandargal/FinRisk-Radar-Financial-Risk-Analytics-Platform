@@ -149,6 +149,41 @@ cp .env.example .env
 If you want, I can help generate a GitHub Actions workflow skeleton that
 reads secrets from `secrets.*` and runs the pipeline in CI.
 
+## ⚙️ How it works — Step-by-step
+
+1. Data ingestion
+    - The `run.sh ingest` job downloads financial data (yfinance), SEC filings
+      (EDGAR), and optional news feeds (NewsAPI) into `data/raw/`.
+    - Raw files are normalized and stored in `data/processed/` for downstream use.
+
+2. Feature engineering
+    - `ml/feature_engineering.py` computes 13 financial ratios and Altman Z-score.
+    - The processed dataset is saved to `data/processed/features.csv`.
+
+3. ML modeling
+    - `ml/train.py` trains an Isolation Forest (unsupervised anomaly detector)
+      and an XGBoost classifier. Outputs are saved under `ml/models/`.
+    - SHAP explanations are generated with `ml/shap_explainer.py`.
+
+4. RAG pipeline
+    - `rag/ingestion.py` extracts text from SEC filings, chunks it, creates
+      embeddings (HuggingFace `all-MiniLM-L6-v2`) and persists them to ChromaDB.
+    - `rag/retriever.py` performs MMR retrieval and cross-encoder reranking.
+    - `rag/generator.py` uses the configured LLM (Gemini/GPT) to generate
+      citation-grounded answers from retrieved context.
+
+5. API & Frontend
+    - `api/main.py` exposes endpoints for risk scoring, RAG Q&A, and alerts.
+    - `frontend/app.py` is a Streamlit dashboard for interactive exploration.
+
+6. Evaluation & monitoring
+    - `evaluation/ragas_eval.py` runs RAGAS-style evaluations to measure
+      faithfulness and context recall for the RAG answers.
+    - Alerts and monitoring can be hooked to Redis/Postgres in production.
+
+If you'd like, I can also add a simple CI workflow that runs unit checks,
+creates the vector DB snapshot, and runs a smoke test against the API.
+
 ### 3. Run the full pipeline
 ```bash
 # Option A: Step by step
