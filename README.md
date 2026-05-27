@@ -134,6 +134,21 @@ cp .env.example .env
 # Edit .env and add your GOOGLE_API_KEY
 ```
 
+## 🔒 Secrets & Security
+
+- Keep secrets out of source control: copy `.env.example` to `.env` and fill
+    in your real API keys. Add `.env` to `.gitignore` (already present in this
+    repo). Never paste secrets into issues or PRs.
+- For CI / GitHub Actions: set repository secrets in `Settings → Secrets`
+    (e.g., `GOOGLE_API_KEY`, `NEWS_API_KEY`, `PINECONE_API_KEY`) so workflows
+    can access them without exposing values in logs.
+- If you previously saw real API keys in `.env.example` or commits, assume
+    they were exposed — rotate those keys immediately and replace them with
+    newly generated keys.
+
+If you want, I can help generate a GitHub Actions workflow skeleton that
+reads secrets from `secrets.*` and runs the pipeline in CI.
+
 ### 3. Run the full pipeline
 ```bash
 # Option A: Step by step
